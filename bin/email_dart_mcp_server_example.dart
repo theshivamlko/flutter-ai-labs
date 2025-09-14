@@ -13,32 +13,28 @@ void main(List<String> arguments) {
   MyMCPServer mcpServer = MyMCPServer(channel);
 }
 
-base class MyMCPServer extends MCPServer with ToolsSupport,LoggingSupport,ElicitationRequestSupport  {
+base class MyMCPServer extends MCPServer
+    with ToolsSupport, LoggingSupport, ElicitationRequestSupport {
   MyMCPServer(super.channel)
-      : super.fromStreamChannel(
-    implementation: Implementation(name: 'MyMCPServer', version: '1.0.0'),
-    instructions: 'This is an example MCP server.',
-  ) {
+    : super.fromStreamChannel(
+        implementation: Implementation(
+          name: 'EmailMCPServer',
+          version: '1.0.0',
+        ),
+        instructions: 'This is an example MCP server to Send Email .',
+      ) {
     registerTool(sendEmailTool, sendEmail);
   }
-
-
 
   final sendEmailTool = Tool(
     name: "sendEmail",
     description:
-    "Sends an email to the given recipient with subject and content using mailer package.",
+        "Sends an email to the given recipient with subject and content using mailer package.",
     inputSchema: Schema.object(
       properties: {
-        "to": Schema.string(
-          description: "Recipient email address.",
-        ),
-        "subject": Schema.string(
-          description: "Subject of the email.",
-        ),
-        "content": Schema.string(
-          description: "Content/body of the email.",
-        ),
+        "to": Schema.string(description: "Recipient email address."),
+        "subject": Schema.string(description: "Subject of the email."),
+        "content": Schema.string(description: "Content/body of the email."),
       },
     ),
   );
@@ -58,7 +54,8 @@ base class MyMCPServer extends MCPServer with ToolsSupport,LoggingSupport,Elicit
       );
     }
 
-    final smtpServer = SmtpServer('smtp.ethereal.email',
+    final smtpServer = SmtpServer(
+      'smtp.ethereal.email',
       username: 'username',
       password: 'password',
       port: 587,
