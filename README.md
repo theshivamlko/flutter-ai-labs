@@ -1,6 +1,6 @@
-# Email Dart MCO Server Example
+# Email Dart MCP Server Example
 
-A Dart-based example server for handling email operations using MCP (Mail Client Protocol).
+A Dart-based example server for handling email operations using MCP (Model Context Protocol).
 
 ## Features
 
