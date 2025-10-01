@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     final darkBase = ThemeData.dark(useMaterial3: true);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Green Chat',
+      title: 'Anthropic Chat Flutter',
       theme: darkBase.copyWith(
         colorScheme: darkBase.colorScheme.copyWith(
           primary: _accentGreen,
@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MyHomePage(title: 'Green Chat'),
+      home: const MyHomePage(title: 'Anthropic Chat'),
     );
   }
 }
@@ -81,26 +81,18 @@ class _ChatMessage {
   const _ChatMessage({
     required this.text,
     required this.isUser,
-    required this.timestamp,
   });
 
   final String text;
   final bool isUser;
-  final DateTime timestamp;
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<_ChatMessage> _messages = [
     _ChatMessage(
       text: 'Hey there! I can help you try the Anthropic API from Flutter.',
-      isUser: false,
-      timestamp: DateTime.now().subtract(const Duration(minutes: 2, seconds: 30)),
-    ),
-    _ChatMessage(
-      text: 'Nice! Let\'s start by drafting a prompt.',
-      isUser: true,
-      timestamp: DateTime.now().subtract(const Duration(minutes: 1, seconds: 45)),
-    ),
+      isUser: false
+    )
   ];
 
   final TextEditingController _textController = TextEditingController();
@@ -127,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       _messages.add(
-        _ChatMessage(text: text, isUser: true, timestamp: DateTime.now()),
+        _ChatMessage(text: text, isUser: true),
       );
     });
     _textController.clear();
@@ -143,7 +135,6 @@ class _MyHomePageState extends State<MyHomePage> {
           _ChatMessage(
             text: 'Echoing "$prompt" for now. Wire this up to Anthropic to get real replies.',
             isUser: false,
-            timestamp: DateTime.now(),
           ),
         );
       });
@@ -217,14 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           height: 1.4,
                         ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _formatTimestamp(message.timestamp),
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: isUser ? const Color(0xFF064E3B) : Colors.white70,
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
+
                 ],
               ),
             ),
@@ -293,19 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.title, style: const TextStyle(fontWeight: FontWeight.w600)),
-            Text(
-              'Online • Encrypted',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w500,
-                  ),
-            ),
-          ],
-        ),
+        title: Text(widget.title, style: const TextStyle(fontWeight: FontWeight.w600)),
       ),
       body: Column(
         children: [
