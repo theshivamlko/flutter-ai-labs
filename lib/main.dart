@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'services/anthropic_service.dart';
 
 const Color _accentGreen = Color(0xFF22C55E);
 const Color _scaffoldColor = Color(0xFF05080F);
 const Color _surfaceColor = Color(0xFF111827);
 const Color _appBarColor = Color(0xFF020617);
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   runApp(const MyApp());
 }
 
@@ -17,7 +21,7 @@ class MyApp extends StatelessWidget {
     final darkBase = ThemeData.dark(useMaterial3: true);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Anthropic Chat Flutter',
+      title: 'Anthropic Chat in Flutter',
       theme: darkBase.copyWith(
         colorScheme: darkBase.colorScheme.copyWith(
           primary: _accentGreen,
@@ -63,7 +67,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MyHomePage(title: 'Anthropic Chat'),
+      home: const MyHomePage(title: 'Anthropic Chat in Flutter'),
     );
   }
 }
@@ -91,12 +95,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<_ChatMessage> _messages = [
     _ChatMessage(
       text: 'Hey there! I can help you try the Anthropic API from Flutter.',
-      isUser: false
-    )
+      isUser: false,
+    ),
   ];
 
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  bool _isSending = false;
 
   @override
   void initState() {
@@ -111,35 +116,53 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void _handleSend() {
+  void _handleSend() async {
     final text = _textController.text.trim();
-    if (text.isEmpty) {
+    if (text.isEmpty || _isSending) {
       return;
     }
 
     setState(() {
-      _messages.add(
-        _ChatMessage(text: text, isUser: true),
-      );
+      _messages.add(_ChatMessage(text: text, isUser: true));
+      _isSending = true;
     });
     _textController.clear();
     _scrollToBottom();
-    _simulateResponse(text);
-  }
 
-  void _simulateResponse(String prompt) {
-    Future.delayed(const Duration(milliseconds: 800), () {
+    try {
+      final service = AnthropicService.instance;
+      final history = _toAnthropicHistory();
+      final reply = await service.sendMessage(messages: history);
       if (!mounted) return;
       setState(() {
-        _messages.add(
-          _ChatMessage(
-            text: 'Echoing "$prompt" for now. Wire this up to Anthropic to get real replies.',
-            isUser: false,
-          ),
-        );
+        _messages.add(_ChatMessage(text: reply, isUser: false));
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Anthropic error: $e')),
+      );
+    } finally {
+      if (!mounted) return;
+      setState(() {
+        _isSending = false;
       });
       _scrollToBottom();
-    });
+    }
+  }
+
+  List<Map<String, dynamic>> _toAnthropicHistory() {
+    return _messages
+        .map((m) => {
+              'role': m.isUser ? 'user' : 'assistant',
+              'content': [
+                {
+                  'type': 'text',
+                  'text': m.text,
+                }
+              ],
+            })
+        .toList();
   }
 
   void _scrollToBottom() {
@@ -241,6 +264,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               child: TextField(
                 controller: _textController,
+                enabled: !_isSending,
                 minLines: 1,
                 maxLines: 4,
                 style: const TextStyle(color: Colors.white),
@@ -256,7 +280,7 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 48,
               width: 48,
               child: ElevatedButton(
-                onPressed: _handleSend,
+                onPressed: _isSending ? null : _handleSend,
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.zero,
                   backgroundColor: _accentGreen,
@@ -264,7 +288,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   shape: const CircleBorder(),
                   elevation: 4,
                 ),
-                child: const Icon(Icons.send_rounded, size: 20),
+                child: _isSending
+                    ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.black),
+                      )
+                    : const Icon(Icons.send_rounded, size: 20),
               ),
             ),
           ],
