@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -25,34 +27,16 @@ class OpenAIChatService {
 
     final userMessage = ChatMessage(
       role: ChatRole.user,
-      content: content.trim(),
+      text: content.trim(),
     );
     _pushMessage(userMessage);
 
     isSendingNotifier.value = true;
     try {
-      final client = OpenAIClient(
-        apiKey: dotenv.env['OPENAI_API_KEY'] ?? '',
-      );
-      if (client.apiKey.isEmpty) {
-        throw StateError('Missing OPENAI_API_KEY dart-define');
-      }
-
-      final response = await client.createChatCompletion(
+      final response = await _createClient().createChatCompletion(
         request: CreateChatCompletionRequest(
           model: ChatCompletionModel.modelId('gpt-5'),
-          messages: messagesNotifier.value.map<ChatCompletionMessage>((msg) {
-            switch (msg.role) {
-              case ChatRole.system:
-                return ChatCompletionMessage.system(content: msg.content);
-              case ChatRole.user:
-                return ChatCompletionMessage.user(
-                  content: ChatCompletionUserMessageContent.string(msg.content),
-                );
-              case ChatRole.assistant:
-                return ChatCompletionMessage.assistant(content: msg.content);
-            }
-          }).toList(),
+          messages: _buildTextOnlyHistory(),
         ),
       );
 
@@ -63,19 +47,92 @@ class OpenAIChatService {
         throw StateError('OpenAI returned an empty response');
       }
 
-      _pushMessage(ChatMessage(role: ChatRole.assistant, content: textValue));
+      _pushMessage(ChatMessage(role: ChatRole.assistant, text: textValue));
     } catch (error, stackTrace) {
       debugPrint('Failed to send message: $error\n$stackTrace');
       _pushMessage(
         ChatMessage(
           role: ChatRole.system,
-          content: 'Sorry, something went wrong. Please try again. ($error)',
+          text: 'Sorry, something went wrong. Please try again. ($error)',
           isError: true,
         ),
       );
     } finally {
       isSendingNotifier.value = false;
     }
+  }
+
+  Future<void> generateImage({required String prompt}) async {
+    if (prompt.trim().isEmpty || isSendingNotifier.value) {
+      return;
+    }
+
+    final sanitizedPrompt = prompt.trim();
+    _pushMessage(
+      ChatMessage(role: ChatRole.user, text: sanitizedPrompt),
+    );
+
+    isSendingNotifier.value = true;
+    try {
+      final response = await _createClient().createImage(
+        request: CreateImageRequest(
+          model: CreateImageRequestModel.model(ImageModels.gptImage1),
+          prompt: sanitizedPrompt,
+          size: ImageSize.v512x512,
+        ),
+      );
+
+      final imageData = response.data?.firstOrNull;
+      final base64Image = imageData?.b64Json;
+      if (base64Image == null || base64Image.isEmpty) {
+        throw StateError('OpenAI returned an empty image payload');
+      }
+
+      _pushMessage(
+        ChatMessage(
+          role: ChatRole.assistant,
+          text: imageData?.revisedPrompt ?? 'Here is your image.',
+          imageBytes: base64Decode(base64Image),
+        ),
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Failed to generate image: $error\n$stackTrace');
+      _pushMessage(
+        ChatMessage(
+          role: ChatRole.system,
+          text: 'Image generation failed. Please try again. ($error)',
+          isError: true,
+        ),
+      );
+    } finally {
+      isSendingNotifier.value = false;
+    }
+  }
+
+  OpenAIClient _createClient() {
+    final apiKey = dotenv.env['OPENAI_API_KEY'] ?? '';
+    if (apiKey.isEmpty) {
+      throw StateError('Missing OPENAI_API_KEY in .env');
+    }
+    return OpenAIClient(apiKey: apiKey);
+  }
+
+  List<ChatCompletionMessage> _buildTextOnlyHistory() {
+    return messagesNotifier.value
+        .where((msg) => !msg.hasImage)
+        .map((msg) {
+          switch (msg.role) {
+            case ChatRole.system:
+              return ChatCompletionMessage.system(content: msg.text ?? '');
+            case ChatRole.user:
+              return ChatCompletionMessage.user(
+                content: ChatCompletionUserMessageContent.string(msg.text ?? ''),
+              );
+            case ChatRole.assistant:
+              return ChatCompletionMessage.assistant(content: msg.text ?? '');
+          }
+        })
+        .toList();
   }
 
   void _pushMessage(ChatMessage message) {
@@ -90,13 +147,17 @@ class OpenAIChatService {
 class ChatMessage {
   ChatMessage({
     required this.role,
-    required this.content,
+    this.text,
+    this.imageBytes,
     this.isError = false,
-  });
+  }) : assert(text != null || imageBytes != null, 'ChatMessage requires text or image');
 
   final ChatRole role;
-  final String content;
+  final String? text;
+  final Uint8List? imageBytes;
   final bool isError;
+
+  bool get hasImage => imageBytes != null;
 }
 
 enum ChatRole { system, user, assistant }

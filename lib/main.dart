@@ -61,6 +61,23 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
+  Future<void> _handleImageGeneration() async {
+    final text = _textController.text.trim();
+    if (text.isEmpty) {
+      return;
+    }
+    _textController.clear();
+    await _chatService.generateImage(prompt: text);
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,6 +123,7 @@ class _ChatPageState extends State<ChatPage> {
             _MessageComposer(
               controller: _textController,
               onSend: _handleSend,
+              onGenerateImage: _handleImageGeneration,
             ),
           ],
         ),
@@ -118,10 +136,12 @@ class _MessageComposer extends StatelessWidget {
   const _MessageComposer({
     required this.controller,
     required this.onSend,
+    required this.onGenerateImage,
   });
 
   final TextEditingController controller;
   final Future<void> Function() onSend;
+  final Future<void> Function() onGenerateImage;
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +160,12 @@ class _MessageComposer extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
             ),
+          ),
+          const SizedBox(width: 8),
+          IconButton.filledTonal(
+            icon: const Icon(Icons.image),
+            tooltip: 'Generate image',
+            onPressed: onGenerateImage,
           ),
           const SizedBox(width: 8),
           IconButton.filled(
@@ -177,7 +203,29 @@ class _ChatBubble extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Text(message.content, style: theme.textTheme.bodyMedium?.copyWith(color: fgColor)),
+        child: Column(
+          crossAxisAlignment:
+              isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (message.text != null)
+              Text(
+                message.text!,
+                style: theme.textTheme.bodyMedium?.copyWith(color: fgColor),
+              ),
+            if (message.imageBytes != null) ...[
+              if (message.text != null) const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.memory(
+                  message.imageBytes!,
+                  width: 240,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
