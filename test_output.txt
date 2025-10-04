@@ -1,0 +1,10 @@
+00:00 +0: loading C:/Users/Navoki/AndroidStudioProjects/flutter_openai_api_example_app/test/widget_test.dart
+00:00 +0 -1: loading C:/Users/Navoki/AndroidStudioProjects/flutter_openai_api_example_app/test/widget_test.dart [E]
+  Failed to load "C:/Users/Navoki/AndroidStudioProjects/flutter_openai_api_example_app/test/widget_test.dart":
+  Compilation failed for testPath=C:/Users/Navoki/AndroidStudioProjects/flutter_openai_api_example_app/test/widget_test.dart: lib/openai_services.dart:37:37: Error: The getter 'responses' isn't defined for the type 'OpenAIClient'.
+   - 'OpenAIClient' is from 'package:openai_dart/src/client.dart' ('../../AppData/Local/Pub/Cache/hosted/pub.dev/openai_dart-0.6.0+1/lib/src/client.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'responses'.
+        final response = await client.responses.create(
+                                      ^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
