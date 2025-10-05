@@ -1,16 +1,38 @@
-# flutter_openai_api_example_app
+# Flutter Openai Api Example App
 
-A new Flutter project.
+Minimal Flutter example app demonstrating OpenAI text (chat) and image generation.
 
-## Getting Started
+## Features
+- Chat-based text generation using the OpenAI GPT (chat) model. Conversation is kept in-memory using a global list.
+- Image generation (example integration with OpenAI image endpoints).
 
-This project is a starting point for a Flutter application.
+## Quick setup
+1. Install Flutter: https://flutter.dev/docs/get-started/install
+2. Add the OpenAI Dart package to `pubspec.yaml`:
+```
+    dependencies:
+        openai_dart: ^0.6.0+1
+        flutter_dotenv: ^5.1.0
+```
 
-A few resources to get you started if this is your first Flutter project:
+3. Provide your OpenAI API key as an environment variable named `OPENAI_API_KEY`.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```
+OPENAI_API_KEY=
+ORGANIZATION=
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Run the app
+
+1. Fetch dependencies:
+
+    `flutter pub get`
+
+2. Run on a connected device or emulator:
+
+    `flutter run`
+
+Notes
+- Chat UI and OpenAI integration live in `lib/main.dart` and `lib/openai_services.dart`.
+- The app keeps the conversation in a global list so the chat persists while the app runs.
+- This `README.md` is intentionally minimal — see the source files for implementation details.
