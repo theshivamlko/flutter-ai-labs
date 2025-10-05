@@ -3,9 +3,12 @@ import 'package:flutter_openai_api_example_app/openai_services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
+
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {

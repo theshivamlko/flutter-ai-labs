@@ -35,12 +35,15 @@ class OpenAIChatService {
     try {
       final response = await _createClient().createChatCompletion(
         request: CreateChatCompletionRequest(
-          model: ChatCompletionModel.modelId('gpt-5'),
+          model: ChatCompletionModel.modelId('gpt-4o'),
           messages: _buildTextOnlyHistory(),
+          modalities: [
+            ChatCompletionModality.text,
+          ],
         ),
       );
 
-      final assistantOutput = response.choices?.firstOrNull;
+      final assistantOutput = response.choices.firstOrNull;
       final textValue = assistantOutput?.message.content;
 
       if (textValue == null || textValue.isEmpty) {
@@ -75,10 +78,13 @@ class OpenAIChatService {
     isSendingNotifier.value = true;
     try {
       final response = await _createClient().createImage(
+
         request: CreateImageRequest(
+
           model: CreateImageRequestModel.model(ImageModels.gptImage1),
+
           prompt: sanitizedPrompt,
-          size: ImageSize.v512x512,
+          size: ImageSize.auto,
         ),
       );
 
@@ -114,7 +120,7 @@ class OpenAIChatService {
     if (apiKey.isEmpty) {
       throw StateError('Missing OPENAI_API_KEY in .env');
     }
-    return OpenAIClient(apiKey: apiKey);
+    return OpenAIClient(apiKey: apiKey,organization:dotenv.env['ORGANIZATION'] );
   }
 
   List<ChatCompletionMessage> _buildTextOnlyHistory() {
