@@ -1,4 +1,4 @@
-# Flutter Gemini AI API Example App
+# Flutter Gemini 3 Pro AI API Example App
 
 Minimal chat UI that calls Gemini REST API directly (no SDK) to generate text and images.
 
