@@ -2,6 +2,10 @@
 A curated collection of LLM-powered Flutter apps built using RAG, AI Agents, Multi-Agent Systems, MCP, and Voice Agents. 
 This repo showcases real-world AI apps using OpenAI, Anthropic, Google, xAI, and open-source models like Qwen and LLaMA — including apps that run locally on your machine.
 
+ 🔥 Targetting for 100+ resources
+
+![ ](https://github.com/theshivamlko/flutter-ai-labs/blob/main/Flutter_Ai_Labs_Banner_Navoki.jpg)
+
 ## Generative AI Roadmap for Mobile Developers
 [ROADMAP](https://github.com/theshivamlko/generative_ai_roadmap_for_mobile_developers)
 
@@ -31,7 +35,7 @@ This repo showcases real-world AI apps using OpenAI, Anthropic, Google, xAI, and
 1. [Build MCP Server in Dart](https://github.com/theshivamlko/email_dart_mcp_server_example)
 
 
-## AI Framework with Flutter and Dart
+## AI Frameworks
 
 ### Genkit Ai framework
 1. [Image Generation with Genkit,Gemini Nano Banana and Flutter ](https://github.com/theshivamlko/image_gen_genkit_flutter_example)
@@ -39,7 +43,7 @@ This repo showcases real-world AI apps using OpenAI, Anthropic, Google, xAI, and
 
 
 ### Langchain Ai framework
-1. [Flutter chat App with Langchain and Cloud Function)[https://github.com/theshivamlko/cloud_function_with_langchain]
+1. [Flutter chat App with Langchain and Cloud Function](https://github.com/theshivamlko/cloud_function_with_langchain)
 
 ### Local LLM with Flutter App
 1. [Local LLM with Flutter](https://github.com/theshivamlko/local_llm_with_ai_agent)
