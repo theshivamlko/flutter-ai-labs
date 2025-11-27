@@ -2,7 +2,8 @@
 A curated collection of LLM-powered Flutter apps built using RAG, AI Agents, Multi-Agent Systems, MCP, and Voice Agents. 
 This repo showcases real-world AI apps using OpenAI, Anthropic, Google, xAI, and open-source models like Qwen and LLaMA — including apps that run locally on your machine.
 
- 🔥 Targetting for 100+ resources
+🌟 Don’t miss out on future updates! Star the repo now
+🔥 Targetting for 100+ resources
 
 ![ ](https://github.com/theshivamlko/flutter-ai-labs/blob/main/Flutter_Ai_Labs_Banner_Navoki.jpg)
 
@@ -56,5 +57,4 @@ This repo showcases real-world AI apps using OpenAI, Anthropic, Google, xAI, and
 
 
 
-🌟 Don’t miss out on future updates! Star the repo now
 
