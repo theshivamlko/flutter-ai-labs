@@ -36,12 +36,16 @@ This repo showcases real-world AI apps using OpenAI, Anthropic, Google, xAI, and
 ## Model Context Protocol (MCP)
 1. [Build MCP Server in Dart](https://github.com/theshivamlko/email_dart_mcp_server_example)
 
+## AI Agent
+1. [HR Agent](https://github.com/theshivamlko/hr_agent_genkit_rag_firestore_flutter_app_example)
+
 
 ## AI Frameworks
 
 ### Genkit Ai framework
 1. [Image Generation with Genkit,Gemini Nano Banana and Flutter ](https://github.com/theshivamlko/image_gen_genkit_flutter_example)
 2. [Genkit on Firebase Cloud function](https://github.com/theshivamlko/image_gen_genkit_flutter_example)
+3. 
 
 
 ### Langchain Ai framework
