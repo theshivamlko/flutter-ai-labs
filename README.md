@@ -45,7 +45,7 @@ This repo showcases real-world AI apps using OpenAI, Anthropic, Google, xAI, and
 ### Genkit Ai framework
 1. [Image Generation with Genkit,Gemini Nano Banana and Flutter ](https://github.com/theshivamlko/image_gen_genkit_flutter_example)
 2. [Genkit on Firebase Cloud function](https://github.com/theshivamlko/image_gen_genkit_flutter_example)
-3. 
+3. [RAG with Genkit and Firestore](https://github.com/theshivamlko/hr_agent_genkit_rag_firestore_flutter_app_example)
 
 
 ### Langchain Ai framework
