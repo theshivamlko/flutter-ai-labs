@@ -12,9 +12,10 @@ This repo showcases real-world AI apps using OpenAI, Anthropic, Google, xAI, and
 
 
 ## LLM APIs
-1. [Flutter Chat app with Anthropic API](https://github.com/theshivamlko/flutter_anthropic_api_app)
-2. [Flutter Chat app with OpenAI API](https://github.com/theshivamlko/flutter_openai_api_example_app)
-3. [Flutter Chat app with MistralAI API](https://github.com/theshivamlko/flutter_mistral_ai_api_example_app)
+1. [Flutter Chat app with Gemini AI API](https://github.com/theshivamlko/flutter-ai-labs/tree/main/llm_api_apps/flutter_gemini_ai_api_example_app)
+2. [Flutter Chat app with Anthropic API](https://github.com/theshivamlko/flutter-ai-labs/tree/main/llm_api_apps/flutter_anthropic_api_app)
+3. [Flutter Chat app with OpenAI API](https://github.com/theshivamlko/flutter-ai-labs/tree/main/llm_api_apps/flutter_openai_api_example_app)
+4. [Flutter Chat app with MistralAI API](https://github.com/theshivamlko/flutter-ai-labs/tree/main/llm_api_apps/flutter_mistral_ai_api_example_app)
 
 
 ## Firebase AI Loggic Flutter Examples
