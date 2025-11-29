@@ -5,7 +5,7 @@ This repo showcases real-world AI apps using OpenAI, Anthropic, Google, xAI, and
 🌟 Don’t miss out on future updates! Star the repo now </br>
 🔥 Targetting for 100+ resources
 
-![ ](https://github.com/theshivamlko/flutter-ai-labs/blob/main/Flutter_Ai_Labs_Banner_Navoki.jpg)
+![ ](https://github.com/theshivamlko/flutter-ai-labs/blob/main/docs/Flutter_Ai_Labs_Banner_Navoki.jpg)
 
 ## Generative AI Roadmap for Mobile Developers
 [ROADMAP](https://github.com/theshivamlko/generative_ai_roadmap_for_mobile_developers)
